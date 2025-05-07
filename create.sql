@@ -1,3 +1,10 @@
+CREATE DATABASE IF NOT EXISTS laliga;
+USE laliga;
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS Team;
+DROP TABLE IF EXISTS Player;
+DROP TABLE IF EXISTS Game;
+DROP TABLE IF EXISTS Event;
 CREATE TABLE Team (
     teamID INT PRIMARY KEY,
     team_name VARCHAR(255) NOT NULL,
@@ -10,6 +17,7 @@ CREATE TABLE Team (
     goal_difference INT DEFAULT 0,
     UNIQUE (team_name)  -- כל שם קבוצה חייב להיות ייחודי
 );
+
 
 CREATE TABLE Player (
     playerID INT PRIMARY KEY,
@@ -27,6 +35,7 @@ CREATE TABLE Player (
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE SET NULL  -- אם קבוצה נמחקת, מזהה הקבוצה אצל השחקנים שלה יקבל ערך NULL
 );
 
+
 CREATE TABLE Game (
     gameID INT PRIMARY KEY,
     home_team_ID INT,
@@ -39,6 +48,7 @@ CREATE TABLE Game (
     CHECK (home_team_ID <> away_team_ID)  -- קבוצה לא יכולה לשחק מול עצמה במשחק
 );
 
+
 CREATE TABLE Event (
     eventID INT PRIMARY KEY,
     gameID INT,
@@ -50,7 +60,7 @@ CREATE TABLE Event (
     FOREIGN KEY (teamID) REFERENCES Team(teamID) ON DELETE CASCADE,  -- אם קבוצה נמחקת, האירועים שלה יימחקו גם כן
     FOREIGN KEY (playerID) REFERENCES Player(playerID) ON DELETE SET NULL  -- אם שחקן נמחק, מזהה השחקן באירועים יקבל ערך NULL
 );
-
+SET FOREIGN_KEY_CHECKS = 1;
 ALTER TABLE Team
 ADD CONSTRAINT unique_team_name
 CHECK (LENGTH(team_name) > 0);
@@ -495,7 +505,7 @@ VALUES
 (4, 2, 'Lionel Messi', 'Forward', 'Argentina', 10, '1987-06-24', 170, 37, 12, 2, 0),
 (5, 2, 'Gerard Pique', 'Defender', 'Spain', 3, '1987-02-02', 194, 3, 1, 8, 0),
 (6, 2, 'Sergio Busquets', 'Midfielder', 'Spain', 5, '1988-07-16', 189, 1, 5, 6, 0),
-(7, 3, 'Antoine Griezmann', 'Forward', 'France', 7, '1991-03-21', 176, 16, 8, 4, 0),
+(84, 3, 'Antoine Griezmann', 'Forward', 'France', 7, '1991-03-21', 176, 16, 8, 4, 0),
 (8, 3, 'Jan Oblak', 'Goalkeeper', 'Slovenia', 13, '1993-01-07', 188, 0, 0, 1, 0),
 (9, 3, 'Koke', 'Midfielder', 'Spain', 6, '1992-01-08', 176, 3, 10, 5, 0),
 (10, 4, 'Wissam Ben Yedder', 'Forward', 'France', 9, '1990-08-12', 170, 17, 6, 2, 0),
@@ -839,7 +849,7 @@ VALUES
 (357, 18, 'Sergio Alvarez', 'Midfielder', 'Spain', 6, '1992-01-23', 176, 1, 2, 3, 0);
 
 
-INSERT INTO Event (eventID, gameID, playerID, event_type, minute)
+INSERT INTO Event (eventID, gameID, playerID, event_type, event_time)
 VALUES
 -- Game 1: (1, 1, 2, 2, 3, '2016-12-03')
 (1, 1, 4, 'goal', 15),
